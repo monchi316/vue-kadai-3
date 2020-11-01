@@ -1,26 +1,25 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <components :is="selectedComponent" v-on:form-click="selectedComponent=$event"></components>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import home from './components/home.vue'
+import working from './components/working.vue'
+import done from './components/done.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    home,
+    working,
+    done
+  },
+  data () {
+    return {
+      selectedComponent: 'home',
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
