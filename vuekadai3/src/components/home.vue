@@ -1,9 +1,9 @@
 <template>
     <div>
         <h1>ToDoリスト</h1>
-        <input type="radio" name="status" @change = "allBtn">すべて
-        <input type="radio" name="status" @change = "workingBtn">作業中
-        <input type="radio" name="status" @change = "doneBtn">完了
+        <input type="radio" name="status" @change = "allBtn" value="all">すべて
+        <input type="radio" name="status" @change = "workingBtn" value="work">作業中
+        <input type="radio" name="status" @change = "doneBtn" value="done">完了
         <table>
             <thead>
                 <th>ID</th>
@@ -11,8 +11,27 @@
                 <th>状態</th>
                 <th></th>
             </thead>
-            <tbody>
+            <!-- すべて選択時リスト -->
+            <tbody v-if="show === 'all'">
                 <tr v-for="task in tasks" :key="task.id">
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.taskName }}</td>
+                    <td><button @click = "statusChange(task.id)">{{ task.status }}</button></td>
+                    <td><button @click = "deleteTask(task.id)">削除</button></td>
+                </tr>
+            </tbody>
+            <!-- 作業中選択時リスト -->
+            <tbody v-if="show === 'work'">
+                <tr v-for="task in works" :key="task.id">
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.taskName }}</td>
+                    <td><button @click = "statusChange(task.id)">{{ task.status }}</button></td>
+                    <td><button @click = "deleteTask(task.id)">削除</button></td>
+                </tr>
+            </tbody>
+            <!-- 完了選択時リスト -->
+            <tbody v-if="show === 'done'">
+                <tr v-for="task in dones" :key="task.id">
                     <td>{{ task.id }}</td>
                     <td>{{ task.taskName }}</td>
                     <td><button @click = "statusChange(task.id)">{{ task.status }}</button></td>
@@ -35,6 +54,8 @@ export default {
             newTask: '',
             working: '作業中',
             done: '完了',
+            show: 'all',
+            radio: 'all'
         }
     },
     computed: {
@@ -42,10 +63,10 @@ export default {
             return this.$store.state.tasks;
         },
         works() {
-            return this.$store.state.works;
+            return this.$store.state.tasks.filter(task => {return task.status === '作業中'});
         },
         dones() {
-            return this.$store.state.dones;
+            return this.$store.state.tasks.filter(task => {return task.status === '完了'});
         },
         newItem()  {
             return this.$store.state.newItem;
@@ -53,7 +74,7 @@ export default {
     },
     methods: {
         statusChange: function(id) {
-                this.$store.commit('statusChange', {id: id, working: this.working, done: this.done});
+            this.$store.commit('statusChange', {id: id, working: this.working, done: this.done});
         },
         addItem: function() {
             this.$store.commit('newItem', this.newTask);
@@ -66,13 +87,13 @@ export default {
             this.$store.commit('deleteTask', id);
         },
         allBtn: function() {
-            this.$emit("form-click", "home");
+            this.show = 'all';
         },
         workingBtn: function() {
-            this.$emit("form-click", "working")
+            this.show = 'work';
         },
         doneBtn: function() {
-            this.$emit("form-click", "done")
+            this.show = 'done';
         }
     }
 }

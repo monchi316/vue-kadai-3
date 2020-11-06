@@ -6,15 +6,11 @@
 
 <script>
 import home from './components/home.vue'
-import working from './components/working.vue'
-import done from './components/done.vue'
 
 export default {
   name: 'App',
   components: {
     home,
-    working,
-    done
   },
   data () {
     return {
